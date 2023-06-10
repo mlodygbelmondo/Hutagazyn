@@ -1,0 +1,32 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.landing-page-image {
+    width: 64px;
+}
+
+.register-button:hover {
+    opacity: 0.9;
+}
+
+.login-button:hover {
+    color: white !important;
+    background-color: #6610f2 !important;
+    transition: all 0.3s ease-in-out !important;
+}

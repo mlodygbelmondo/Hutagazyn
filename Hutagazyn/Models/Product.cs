@@ -4,9 +4,9 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Mass { get; set; }
+        public int Amount { get; set; }
         public int Price { get; set; }
-        public Boolean IsSellable { get; set; }
+        public ICollection<AdditionalOrderInfo> AdditionalOrderInfos { get; } = new List<AdditionalOrderInfo>();
         public Product()
         {
             

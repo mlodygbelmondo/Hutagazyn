@@ -10,87 +10,94 @@ using Hutagazyn.Models;
 
 namespace Hutagazyn.Controllers
 {
-    public class ProductsController : Controller
+    public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: Order
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
-                          View(await _context.Product.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+            var applicationDbContext = _context.Order.Include(o => o.Delivery).Include(o => o.Group);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        // GET: Order/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.Order == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var order = await _context.Order
+                .Include(o => o.Delivery)
+                .Include(o => o.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(order);
         }
 
-        // GET: Products/Create
+        // GET: Order/Create
         public IActionResult Create()
         {
+            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id");
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Order/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Amount,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,GroupId,DeliveryId")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id", order.DeliveryId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id", order.GroupId);
+            return View(order);
         }
 
-        // GET: Products/Edit/5
+        // GET: Order/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.Order == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            var order = await _context.Order.FindAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            return View(product);
+            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id", order.DeliveryId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id", order.GroupId);
+            return View(order);
         }
 
-        // POST: Products/Edit/5
+        // POST: Order/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Amount,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupId,DeliveryId")] Order order)
         {
-            if (id != product.Id)
+            if (id != order.Id)
             {
                 return NotFound();
             }
@@ -99,12 +106,12 @@ namespace Hutagazyn.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!OrderExists(order.Id))
                     {
                         return NotFound();
                     }
@@ -115,49 +122,53 @@ namespace Hutagazyn.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id", order.DeliveryId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id", order.GroupId);
+            return View(order);
         }
 
-        // GET: Products/Delete/5
+        // GET: Order/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.Order == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var order = await _context.Order
+                .Include(o => o.Delivery)
+                .Include(o => o.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(order);
         }
 
-        // POST: Products/Delete/5
+        // POST: Order/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Product == null)
+            if (_context.Order == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Order'  is null.");
             }
-            var product = await _context.Product.FindAsync(id);
-            if (product != null)
+            var order = await _context.Order.FindAsync(id);
+            if (order != null)
             {
-                _context.Product.Remove(product);
+                _context.Order.Remove(order);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool OrderExists(int id)
         {
-          return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

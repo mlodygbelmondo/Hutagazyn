@@ -4,6 +4,7 @@ using Hutagazyn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hutagazyn.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230704010557_updated_database_models")]
+    partial class updated_database_models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,7 +95,10 @@ namespace Hutagazyn.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("DeliveryId")
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DeliveryId")
                         .HasColumnType("int");
 
                     b.Property<int>("GroupId")
@@ -354,19 +359,15 @@ namespace Hutagazyn.Data.Migrations
 
             modelBuilder.Entity("Hutagazyn.Models.Order", b =>
                 {
-                    b.HasOne("Hutagazyn.Models.Delivery", "Delivery")
+                    b.HasOne("Hutagazyn.Models.Delivery", null)
                         .WithMany("Orders")
-                        .HasForeignKey("DeliveryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DeliveryId");
 
                     b.HasOne("Hutagazyn.Models.Group", "Group")
                         .WithMany("Orders")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Delivery");
 
                     b.Navigation("Group");
                 });

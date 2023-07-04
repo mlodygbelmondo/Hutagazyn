@@ -10,87 +10,87 @@ using Hutagazyn.Models;
 
 namespace Hutagazyn.Controllers
 {
-    public class ProductsController : Controller
+    public class DeliveryController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        public DeliveryController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: Delivery
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
-                          View(await _context.Product.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+              return _context.Delivery != null ? 
+                          View(await _context.Delivery.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Delivery'  is null.");
         }
 
-        // GET: Products/Details/5
+        // GET: Delivery/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.Delivery == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var delivery = await _context.Delivery
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (delivery == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(delivery);
         }
 
-        // GET: Products/Create
+        // GET: Delivery/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Delivery/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Amount,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Date")] Delivery delivery)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(delivery);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(delivery);
         }
 
-        // GET: Products/Edit/5
+        // GET: Delivery/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.Delivery == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            var delivery = await _context.Delivery.FindAsync(id);
+            if (delivery == null)
             {
                 return NotFound();
             }
-            return View(product);
+            return View(delivery);
         }
 
-        // POST: Products/Edit/5
+        // POST: Delivery/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Amount,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date")] Delivery delivery)
         {
-            if (id != product.Id)
+            if (id != delivery.Id)
             {
                 return NotFound();
             }
@@ -99,12 +99,12 @@ namespace Hutagazyn.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(delivery);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!DeliveryExists(delivery.Id))
                     {
                         return NotFound();
                     }
@@ -115,49 +115,49 @@ namespace Hutagazyn.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(delivery);
         }
 
-        // GET: Products/Delete/5
+        // GET: Delivery/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.Delivery == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var delivery = await _context.Delivery
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if (delivery == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(delivery);
         }
 
-        // POST: Products/Delete/5
+        // POST: Delivery/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Product == null)
+            if (_context.Delivery == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Delivery'  is null.");
             }
-            var product = await _context.Product.FindAsync(id);
-            if (product != null)
+            var delivery = await _context.Delivery.FindAsync(id);
+            if (delivery != null)
             {
-                _context.Product.Remove(product);
+                _context.Delivery.Remove(delivery);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool DeliveryExists(int id)
         {
-          return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Delivery?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

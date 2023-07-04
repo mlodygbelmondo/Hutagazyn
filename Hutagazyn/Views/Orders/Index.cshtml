@@ -4,14 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Orders</h1>
+    <a class="text-white register-button" asp-action="Create" style="text-decoration:none; padding: 0.55rem 1.25rem; background-color: #6610f2; border-radius: 2rem; font-size: 1.1rem; font-weight: 600;">
+        Create a new order
+    </a>
+</div>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Creation Date
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Group)
             </th>
@@ -25,10 +29,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Group.Id)
+                @Html.DisplayFor(modelItem => item.CreationDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Delivery.Id)
+                @Html.DisplayFor(modelItem => item.Group.DeliveryHour)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Delivery.Date)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

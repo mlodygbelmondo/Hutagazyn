@@ -10,23 +10,23 @@ using Hutagazyn.Models;
 
 namespace Hutagazyn.Controllers
 {
-    public class OrderController : Controller
+    public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public OrderController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Order
+        // GET: Orders
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Order.Include(o => o.Delivery).Include(o => o.Group);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Order/Details/5
+        // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Order == null)
@@ -46,33 +46,27 @@ namespace Hutagazyn.Controllers
             return View(order);
         }
 
-        // GET: Order/Create
+        // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id");
-            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id");
+            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Date");
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Carrier");
             return View();
         }
 
-        // POST: Order/Create
+        // POST: Orders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GroupId,DeliveryId")] Order order)
+        public async Task<IActionResult> Create([Bind("Id,CreationDate,GroupId,DeliveryId")] Order order)
         {
-            if (ModelState.IsValid)
-            {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id", order.DeliveryId);
-            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id", order.GroupId);
-            return View(order);
         }
 
-        // GET: Order/Edit/5
+        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Order == null)
@@ -85,17 +79,17 @@ namespace Hutagazyn.Controllers
             {
                 return NotFound();
             }
-            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Id", order.DeliveryId);
-            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Id", order.GroupId);
+            ViewData["DeliveryId"] = new SelectList(_context.Delivery, "Id", "Date", order.DeliveryId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Carrier", order.GroupId);
             return View(order);
         }
 
-        // POST: Order/Edit/5
+        // POST: Orders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupId,DeliveryId")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CreationDate,GroupId,DeliveryId")] Order order)
         {
             if (id != order.Id)
             {
@@ -127,7 +121,7 @@ namespace Hutagazyn.Controllers
             return View(order);
         }
 
-        // GET: Order/Delete/5
+        // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Order == null)
@@ -147,7 +141,7 @@ namespace Hutagazyn.Controllers
             return View(order);
         }
 
-        // POST: Order/Delete/5
+        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

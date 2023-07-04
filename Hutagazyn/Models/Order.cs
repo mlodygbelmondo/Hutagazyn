@@ -1,4 +1,8 @@
-﻿namespace Hutagazyn.Models
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+
+namespace Hutagazyn.Models
 {
     public class AdditionalOrderInfo
     {
@@ -14,21 +18,21 @@
 
         }
     }
-        public class Order
+    public class Order
+    {
+        public int Id { get; set; }
+        public DateTime CreationDate { get; set; }
+        public int GroupId { get; set; }
+        public virtual Group Group { get; set; } = null!;
+        public int DeliveryId { get; set; }
+        public virtual Delivery Delivery { get; set; } = null!;
+
+        public virtual ICollection<AdditionalOrderInfo> AdditionalOrderInfos { get; } = new List<AdditionalOrderInfo>();
+        public Order()
         {
-            public int Id { get; set; }
-            public DateTime CreationDate { get; } = DateTime.Now;
-            public int GroupId { get; set; }
-            public virtual Group Group { get; set; } = null!;
-            public int DeliveryId { get; set; }
-            public virtual Delivery Delivery { get; set; } = null!;
 
-            public virtual ICollection<AdditionalOrderInfo> AdditionalOrderInfos { get; } = new List<AdditionalOrderInfo>();
-            public Order()
-            {
-
-            }
         }
     }
+}
 
 

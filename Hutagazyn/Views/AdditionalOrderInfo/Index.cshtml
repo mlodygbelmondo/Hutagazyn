@@ -4,11 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Order elements</h1>
+    <a class="text-white register-button" asp-action="Create" style="text-decoration:none; padding: 0.55rem 1.25rem; background-color: #6610f2; border-radius: 2rem; font-size: 1.1rem; font-weight: 600;">
+        Create a new order element
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -31,10 +33,10 @@
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Id)
+                @Html.DisplayFor(modelItem => item.Product.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Order.Id)
+                @Html.DisplayFor(modelItem => item.Order.CreationDate)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

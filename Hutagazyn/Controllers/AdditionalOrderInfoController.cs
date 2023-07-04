@@ -49,8 +49,8 @@ namespace Hutagazyn.Controllers
         // GET: AdditionalOrderInfo/Create
         public IActionResult Create()
         {
-            ViewData["OrderId"] = new SelectList(_context.Order, "Id", "Id");
-            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Id");
+            ViewData["OrderId"] = new SelectList(_context.Order, "Id", "CreationDate");
+            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Name");
             return View();
         }
 
@@ -61,15 +61,9 @@ namespace Hutagazyn.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Amount,ProductId,OrderId")] AdditionalOrderInfo additionalOrderInfo)
         {
-            if (ModelState.IsValid)
-            {
                 _context.Add(additionalOrderInfo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["OrderId"] = new SelectList(_context.Order, "Id", "Id", additionalOrderInfo.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Id", additionalOrderInfo.ProductId);
-            return View(additionalOrderInfo);
         }
 
         // GET: AdditionalOrderInfo/Edit/5
@@ -85,8 +79,8 @@ namespace Hutagazyn.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrderId"] = new SelectList(_context.Order, "Id", "Id", additionalOrderInfo.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Id", additionalOrderInfo.ProductId);
+            ViewData["OrderId"] = new SelectList(_context.Order, "Id", "CreationDate", additionalOrderInfo.OrderId);
+            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Name", additionalOrderInfo.ProductId);
             return View(additionalOrderInfo);
         }
 
@@ -102,8 +96,6 @@ namespace Hutagazyn.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     _context.Update(additionalOrderInfo);
@@ -121,10 +113,7 @@ namespace Hutagazyn.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["OrderId"] = new SelectList(_context.Order, "Id", "Id", additionalOrderInfo.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Product, "Id", "Id", additionalOrderInfo.ProductId);
-            return View(additionalOrderInfo);
+
         }
 
         // GET: AdditionalOrderInfo/Delete/5
